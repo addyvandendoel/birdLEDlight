@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<!-- 
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com  
+"mqttServerName": "home.vandendoel.info",
+    "deviceName": "flowsensortst",
+    "deviceNameFriendly": "flowsensor garden tst",
+    "IPlocal": "192.168.1.213",
+    "IPgateway": "192.168.1.1",
+    "IPsubnet": "255.255.255.0",
+    "IPDNSprimary": "192.168.1.1",
+    "IPDNSsecondary": "192.168.1.2",
+    "ledStatus": 2
+-->
+<html>
+
+<head>
+  <title>ESP8266 Web Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <div class="topnav">
+    <a class="active" href="/config">About</a>
+    <a href="/device">Device</a>
+    <a href="/util">Util</a>
+  </div>
+  <h1>
+    <div id="configName">%NAME%</div>
+  </h1>
+  <h2>
+    <div id="page">About page</div>
+  </h2>
+  <div style="clear: both;"></div>
+
+  <span class="config-labels">Device friendly name </span>
+  <span class="config-text-labels" id="configFriendlyName">%FRIENDLYNAME%</span>
+  <div style="clear: both;"></div>
+  <span class="config-labels">IP Address </span>
+  <span class="config-text-labels" id="configIPAddress">%IPADDRESS%</span>
+  <div style="clear: both;"></div>
+  <span class="config-labels">IP Gateway </span>
+  <span class="config-text-labels" id="configIPGateway">%IPGATEWAY%</span>
+  <div style="clear: both;"></div>
+  <span class="config-labels">IP Subnet </span>
+  <span class="config-text-labels" id="configIPSubnet">%IPSUBNET%</span>
+  <div style="clear: both;"></div>
+  <span class="config-labels">LED Status </span>
+  <span class="config-text-labels" id="configLEDStatus">%LEDSTATUS%</span>
+  <div style="clear: both;"></div>
+  <span class="config-labels">Firmware Version </span>
+  <span class="config-text-labels" id="configFirmwareVersion">%FIRMWAREVERSION%</span>
+  <div style="clear: both;"></div>
+</body>
+<script>
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configName").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configName", true);
+    xhttp.send();
+  }, 10000);
+
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configFriendlyName").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configFriendlyName", true);
+    xhttp.send();
+  }, 10000);
+
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configIPAddress").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configIPAddress", true);
+    xhttp.send();
+  }, 10000);
+
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configIPGateway").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configIPGateway", true);
+    xhttp.send();
+  }, 10000);
+
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configIPSubnet").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configIPSubnet", true);
+    xhttp.send();
+  }, 10000);
+
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configLEDStatus").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configLEDStatus", true);
+    xhttp.send();
+  }, 10000);
+
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configFirmwareVersion").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configFirmwareVersion", true);
+    xhttp.send();
+  }, 10000);
+
+
+</script>
+
+</html>

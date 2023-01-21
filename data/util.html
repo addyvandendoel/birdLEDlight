@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- 
+  Rui Santos
+  Complete project details at https://RandomNerdTutorials.com  
+"mqttServerName": "home.vandendoel.info",
+    "deviceName": "flowsensortst",
+    "deviceNameFriendly": "flowsensor garden tst",
+    "IPlocal": "192.168.1.213",
+    "IPgateway": "192.168.1.1",
+    "IPsubnet": "255.255.255.0",
+    "IPDNSprimary": "192.168.1.1",
+    "IPDNSsecondary": "192.168.1.2",
+    "ledStatus": 2
+-->
+<html>
+
+<head>
+  <title>ESP8266 Web Server</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <div class="topnav">
+    <a href="/config">About</a>
+    <a href="/device">Device</a>
+    <a class="active" href="/util">Util</a>
+  </div>
+  <h1>
+    <div id="configName">%NAME%</div>
+  </h1>
+  <h2>
+    <div id="page">Util page</div>
+  </h2>
+  <div style="clear: both;"></div>
+  <span class="util-labels">WiFi Status </span>
+  <span class="util-text-labels" id="wifistatus">%WIFISTATUS%</span>
+  <div style="clear: both;"></div>
+  <a href="/devicerestart"><button class="button">Restart Device</button></a>
+  <div style="clear: both;"></div>
+  <a href="/devicereset"><button class="button">Reset Device</button></a>
+
+
+
+</body>
+<script>
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("configName").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/configName", true);
+    xhttp.send();
+  }, 10000);
+
+  setInterval(function () {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        document.getElementById("wifistatus").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("GET", "/wifistatus", true);
+    xhttp.send();
+  }, 10000);
+
+</script>
+
+</html>

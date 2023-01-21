@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!-- 
+Rui Santos
+Complete project details at https://RandomNerdTutorials.com  
+-->
+<html>
+  <head>
+    <title>ESP8266 Web Server - %FRIENDLYNAME%</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Audiowide"
+    />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+    <div class="topnav">
+      <a href="/config">About</a>
+      <a class="active" href="/device">Device</a>
+      <a href="/util">Util</a>
+    </div>
+
+    <h1>
+      <div id="configName">%NAME%</div>
+    </h1>
+    <h2>
+      <div id="page">Device page</div>
+    </h2>
+    <div style="clear: both"></div>
+
+    <span class="config-labels">Device friendly name </span>
+    <span class="config-text-labels" id="configFriendlyName"
+      >%FRIENDLYNAME%</span
+    >
+    <!--     <div style="clear: both"></div>
+    <div class="slidecontainer">
+      <span class="config-labels">LED brightness</span>
+      <input
+        type="range"
+        onchange="updateSliderPWM(this)"
+        id="pwmSlider"
+        min="0"
+        max="255"
+        value="%SLIDERVALUE%"
+        step="1"
+        class="slider"
+      />
+    </div>
+    <p><span id="textSliderValue">%SLIDERVALUE%</span></p>
+    <div style="clear: both"></div>
+    <div style="clear: both"></div>
+    <div class="waittimecontainer">
+      <span class="config-labels">Fade IN and OUT time [Seconds]</span>
+      <input
+        type="range"
+        onchange="updateWaitTime(this)"
+        id="waittimer"
+        min="1"
+        max="3600"
+        value="%WAITTIME%"
+        step="1"
+        class="waittime"
+      />
+    </div>
+-->
+
+    <div style="clear: both"></div>
+    <div class="waittimecontainer">
+      <span class="config-labels">Fade IN and OUT time [Seconds]&nbsp </span>
+      <input
+        type="text"
+        onchange="updateWaitTime(this)"
+        id="waittimer"
+        value="%WAITTIME%"
+        class="waittime"
+      />
+    </div>
+    <p><span id="textWaitTimeSeconds">%WAITTIME%</span> in Seconds</p>
+    <p><span id="textWaitTimeMinute">%WAITTIMEMINUTE%</span> in Minutes</p>
+    <div style="clear: both"></div>
+  </body>
+  <script>
+    setInterval(function () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("configName").innerHTML = this.responseText;
+        }
+      };
+      xhttp.open("GET", "/configName", true);
+      xhttp.send();
+    }, 10000);
+
+    setInterval(function () {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          document.getElementById("configFriendlyName").innerHTML =
+            this.responseText;
+        }
+      };
+      xhttp.open("GET", "/configFriendlyName", true);
+      xhttp.send();
+    }, 10000);
+
+    function updateSliderPWM(element) {
+      var xhttp = new XMLHttpRequest();
+      var sliderValue = document.getElementById("pwmSlider").value;
+      document.getElementById("textSliderValue").innerHTML = sliderValue;
+      console.log(sliderValue);
+      xhttp.open("GET", "/slider?value=" + sliderValue, true);
+      xhttp.send();
+    }
+
+    function updateWaitTime(element) {
+      var xhttp = new XMLHttpRequest();
+      var waittimeValue = document.getElementById("waittimer").value;
+      document.getElementById("textWaitTimeSeconds").innerHTML = waittimeValue;
+      document.getElementById("textWaitTimeMinute").innerHTML = (
+        waittimeValue / 60
+      ).toFixed(2);
+      console.log(waittimeValue);
+      xhttp.open("GET", "/waittime?value=" + waittimeValue, true);
+      xhttp.send();
+    }
+  </script>
+</html>
