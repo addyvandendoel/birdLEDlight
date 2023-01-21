@@ -1,0 +1,10 @@
+{
+    "deviceName": "birdledlight",
+    "deviceNameFriendly": "Bird LED Light",
+    "IPlocal": "192.168.1.222",
+    "IPgateway": "192.168.1.1",
+    "IPsubnet": "255.255.255.0",
+    "IPDNSprimary": "192.168.1.1",
+    "IPDNSsecondary": "192.168.1.2",
+    "ledStatus": 2
+}
