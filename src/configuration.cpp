@@ -7,7 +7,7 @@
 #include "debugger.h"
 
 #define CONFIG_JSON_BUFFERSIZE 800
-#define CONFIG_VERSION "1.0.0 AVD 20230101"
+#define CONFIG_VERSION "1.1.0 AVD 20230211"
 
 bool shouldSaveConfig;
 Config config;

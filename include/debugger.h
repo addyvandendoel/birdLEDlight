@@ -22,7 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DEBUGUTILS_H
 #define DEBUGUTILS_H
 
-#define DEBUGGER
 
 #ifdef DEBUGGER
 //#include <WProgram.h>

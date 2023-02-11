@@ -5,7 +5,8 @@ Chip is ESP8266 Mini D1 pro for test
 Features: WiFi
 
 Changelog
-AVD 20221231    v0.1    Test setup for pwm testing
+AVD 20221231    v1.0.0    Test setup for pwm testing
+AVD 20230211    v1.1.0    Setup WiFi in AP mode, and configed with 600 seconds
 
 
 SET VERSION IN CONFIGURATION.CPP!!!
@@ -39,8 +40,6 @@ ledStatus options can be found in device.cpp
 #define TIMERDETECTPIN 16 // FIXME esp port 3 GPIO 10
 #define LEDPIN 14
 
-#define LIGHT_FULL_ON 20
-#define LIGHT_FULL_OFF 0
 #include <Arduino.h>
 
 #include "OTA.h"
@@ -99,31 +98,9 @@ void loop() {
 	loopDevice(false);
 
 	// check if we have wifi and mqtt, if we do, let's do our trick
-	if (wifiStatus) {
-		// Listen to OTA to see if we have an firmware update
-		checkOTA();
-		// check connection to WiFi and MQTT server, as it needs a handshake now and then.
-		wifiStatus = checkWiFiconnected();
-	}
-	else {
-		// no wifi or mqtt, no worries, we can still use our good old switches
-		flashLED();
-		// every 5 minutes we check to see if WiFi and/or MQTT returned.
-		unsigned long startTime = millis();
-		if (startTime - prevTimeCheckConnection >= interval) {
-			prevTimeCheckConnection = startTime;
-			// do something 
-			wifiStatus = checkWiFiconnected();
-			DEBUG_PRINT("Checking WiFi again...\n");
-			DEBUG_PRINT(wifiStatus);
-			if (wifiStatus) {
-				DEBUG_PRINT("WiFi RETURN!! :)\n");
-			}
-			else {
-				DEBUG_PRINT("Still no WiFi :( \n");
-			}
-		}
-	}
+	//checkWiFiconnected();
+	// Listen to OTA to see if we have an firmware update
+	checkOTA();
 }
 // ____________________________________________________________________________________________________________________
 //  Name:   flashLED

@@ -7,6 +7,9 @@
 #include "device.h"  // FIXME with a get/set? here for resetFlag
 #include "secrets.h"
 
+uint8_t max_connections = 4;//Maximum Connection Limit for AP
+int current_stations = 0, new_stations = 0;
+
 // ____________________________________________________________________________________________________________________
 //  Name:   WiFiConnection
 //  Usage:  Setup the WiFi and load of write the config settings
@@ -57,30 +60,24 @@ boolean WiFiConnection() {
 		DEBUG_PRINT(IPDNSsecondary);
 	}
 
-	if (!WiFi.config(IPlocal, IPgateway, IPsubnet, IPDNSprimary, IPDNSsecondary)) {
-		Serial.println("STA Failed to configure");
-	}
 
-	DEBUG_PRINT("starting wifi connection");
-	WiFi.mode(WIFI_STA);
-	unsigned long startedAt = millis();
-	// org      WiFi.begin();
-	WiFi.begin(CONFIG_WIFI_SSID, CONFIG_WIFI_PASS);  // Start the access point
-
-	while (WiFi.status() != WL_CONNECTED) {
-		if (millis() - startedAt > 5000) {
-			DEBUG_PRINT("WiFi connection FAILED!!\r\n");
-			return false;
-		}  // not there after 5 seconds, let's kill it
-		yield();
+	WiFi.softAPConfig(IPlocal, IPgateway, IPsubnet);
+	if (WiFi.softAP(CONFIG_WIFI_SSID, CONFIG_WIFI_PASS, 1, false, max_connections))
+	{
+		Serial.print("Access Point is Creadted with SSID: ");
+		Serial.println(CONFIG_WIFI_SSID);
+		Serial.print("Max Connections Allowed: ");
+		Serial.println(max_connections);
+		Serial.print("Access Point IP: ");
+		Serial.println(WiFi.softAPIP());
+		return true;
 	}
-	DEBUG_PRINT("");  // WiFi info
-	DEBUG_PRINT("WiFi connected to:");
-	DEBUG_PRINT(WiFi.SSID());
-	DEBUG_PRINT("IP address: ");
-	DEBUG_PRINT(WiFi.localIP());
-	DEBUG_PRINT("Connected");
-	return true;
+	else
+	{
+		Serial.println("Unable to Create Access Point");
+		return false;
+	}
+	return false;
 }
 
 // ____________________________________________________________________________________________________________________
@@ -89,17 +86,50 @@ boolean WiFiConnection() {
 //  Input:  none
 //  Return: bool true if needed
 // ____________________________________________________________________________________________________________________
-bool checkWiFiconnected() {
-	if (WiFi.status() != WL_CONNECTED) {
-		DEBUG_PRINT("OH NO! WiFi failed! reconnecting to WiFi...\r\n");
-		WiFi.disconnect();
-		return WiFiConnection();
+void checkWiFiconnected() {
+	new_stations = WiFi.softAPgetStationNum();
+	struct station_info* stat_info;
+	stat_info = wifi_softap_get_station_info();
+	struct ip4_addr* IPaddress;
+	IPAddress address;
+	int cnt = 1;
+
+	if (current_stations < new_stations)//Device is Connected
+	{
+		current_stations = new_stations;
+		Serial.print("New Device Connected to SoftAP... Total Connections: ");
+		Serial.println(current_stations);
 	}
-	else {
-		//        DEBUG_PRINT("WiFi connected\r\n");
-		return true;
+
+	if (current_stations > new_stations)//Device is Disconnected
+	{
+		current_stations = new_stations;
+		Serial.print("Device disconnected from SoftAP... Total Connections: ");
+		Serial.println(current_stations);
 	}
+
+	while (stat_info != NULL)
+	{
+		IPaddress = &stat_info->ip;
+		address = IPaddress->addr;
+
+		Serial.print(cnt);
+		Serial.print(": IP: ");
+		Serial.print((address));
+		Serial.print(" MAC: ");
+
+		uint8_t* p = stat_info->bssid;
+		Serial.printf("%02X:%02X:%02X:%02X:%02X:%02X", p[0], p[1], p[2], p[3], p[4], p[5]);
+
+		stat_info = STAILQ_NEXT(stat_info, next);
+		cnt++;
+		Serial.println();
+
+	}
+
 }
+
+
 
 // ____________________________________________________________________________________________________________________
 //  Name:   get_LEDStatusString()
@@ -109,11 +139,13 @@ bool checkWiFiconnected() {
 // ____________________________________________________________________________________________________________________
 void getWifiStatus(char* status, size_t statussize) {
 	bool wifiStat = false;
-	wifiStat = checkWiFiconnected();
-	if (wifiStat) {
-		snprintf(status, statussize, "ON");
-	}
-	else {
-		snprintf(status, statussize, "OFF");
-	}
+	snprintf(status, statussize, "ON");
+	//	wifiStat = checkWiFiconnected();
+	//	if (wifiStat) {
+	//		snprintf(status, statussize, "ON");
+	//	}
+	//	else {
+	//		snprintf(status, statussize, "OFF");
+	//	}
+
 }
